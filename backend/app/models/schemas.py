@@ -23,14 +23,9 @@ class PromptResponse(BaseModel):
     prompt: str
     project_name: str
     user_id: str
-    execution_status: ExecutionStatus
-    ai_response: Optional[str] = None
     idempotency_key: str
     created_at: datetime
     is_duplicate: bool = False
-
-    class Config:
-        from_attributes = True
 
 
 class HealthResponse(BaseModel):

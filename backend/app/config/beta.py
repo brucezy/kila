@@ -1,5 +1,5 @@
 from pydantic_settings import SettingsConfigDict
-from base import BaseConfig
+from app.config.base import BaseConfig
 
 
 class BetaConfig(BaseConfig):

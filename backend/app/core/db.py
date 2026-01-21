@@ -31,21 +31,24 @@ class PromptRecord(Base):
     """
     The prompts table in the database
     """
-    __table_name__ = settings.db_prompts_table_name
+    __tablename__ = settings.db_prompts_table_name
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     prompt = Column(Text, nullable=False)
     project_name = Column(String(100), nullable=False, index=True)
     user_id = Column(String(100), nullable=False, index=True)
-    ai_response = Column(Text, nullable=True)
+    company_id = Column(String(100), nullable=False, index=True)
     idempotency_key = Column(String(100), nullable=False, unique=True, index=True)
     created_at = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
-    updated_at = Column(DateTime, default=datetime.now(timezone.utc), onupdate=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc), nullable=False)
+    is_active = Column(Boolean, default=True, nullable=False, index=False)
 
     # Composite indexes for common queries
     __table_args__ = (
         Index('idx_project_user', 'project_name', 'user_id'),
         Index('idx_user_created', 'user_id', 'created_at'),
+        Index('idx_idempotency_key', 'idempotency_key', 'idempotency_key'),
+        Index('idx_company_id', 'company_id', 'company_id')
     )
 
 
@@ -53,7 +56,7 @@ class UsersRecord(Base):
     """
     The users table in the database
     """
-    __table_name__ = settings.db_users_table_name
+    __tablename__ = settings.db_users_table_name
 
     user_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     username = Column(String(100), nullable=False, index=True)
@@ -74,7 +77,7 @@ class ProjectsRecord(Base):
     """
     The projects table in the database
     """
-    __table_name__ = settings.db_projects_table_name
+    __tablename__ = settings.db_projects_table_name
 
     project_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     project_name = Column(String(100), nullable=False, index=True)
@@ -91,12 +94,14 @@ class ProjectsRecord(Base):
     )
 
 
+"""
 class PromptRunningStatus(Base):
     execution_status = Column(
         Enum("success", "failed", "pending", name="execution_status_enum"),
         nullable=False,
         default="pending"
     )
+"""
 
 
 # Dependency for database sessions

@@ -2,8 +2,12 @@ from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
-from app.models.schemas import PromptRequest, PromptResponse, ExecutionStatus
 import logging
+from typing import List
+
+from app.models.schemas import PromptRequest, PromptResponse, ExecutionStatus
+from app.core.db import PromptRecord, get_db
+
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/v1/prompts", tags=["prompts"])
@@ -12,7 +16,7 @@ router = APIRouter(prefix="/api/v1/prompts", tags=["prompts"])
 @router.post("/", response_model=PromptResponse, status_code=201)
 async def create_prompt(
         request: PromptRequest,
-        db: AsyncSession = Depends(get_db)
+        database: AsyncSession = Depends(get_db)
 ):
     """
     Create a new prompt and process it with AI model.
@@ -23,7 +27,7 @@ async def create_prompt(
         stmt = select(PromptRecord).where(
             PromptRecord.idempotency_key == request.idempotency_key
         )
-        result = await db.execute(stmt)
+        result = await database.execute(stmt)
         existing_prompt = result.scalar_one_or_none()
 
         if existing_prompt:
@@ -33,8 +37,6 @@ async def create_prompt(
                 prompt=existing_prompt.prompt,
                 project_name=existing_prompt.project_name,
                 user_id=existing_prompt.user_id,
-                execution_status=ExecutionStatus(existing_prompt.execution_status),
-                ai_response=existing_prompt.ai_response,
                 idempotency_key=existing_prompt.idempotency_key,
                 created_at=existing_prompt.created_at,
                 is_duplicate=True
@@ -46,47 +48,36 @@ async def create_prompt(
             project_name=request.project_name,
             user_id=request.user_id,
             idempotency_key=request.idempotency_key,
-            execution_status="pending"
+            company=request.company
         )
 
-        db.add(new_prompt)
-        await db.flush()  # Get the ID without committing
+        database.add(new_prompt)
+        # await database.flush()  # Get the ID without committing
 
-        # Process with AI model
-        try:
-            ai_response = await process_prompt(request.prompt)
-            new_prompt.ai_response = ai_response
-            new_prompt.execution_status = "success"
-            logger.info(f"Successfully processed prompt ID: {new_prompt.id}")
-        except Exception as ai_error:
-            logger.error(f"AI processing failed for prompt ID {new_prompt.id}: {str(ai_error)}")
-            new_prompt.execution_status = "failed"
-            new_prompt.ai_response = f"Error: {str(ai_error)}"
-
-        await db.commit()
-        await db.refresh(new_prompt)
+        await database.commit()
+        await database.refresh(new_prompt)
 
         return PromptResponse(
             id=new_prompt.id,
             prompt=new_prompt.prompt,
             project_name=new_prompt.project_name,
             user_id=new_prompt.user_id,
-            execution_status=ExecutionStatus(new_prompt.execution_status),
-            ai_response=new_prompt.ai_response,
             idempotency_key=new_prompt.idempotency_key,
             created_at=new_prompt.created_at,
-            is_duplicate=False
+            is_duplicate=False,
+            company=new_prompt.company,
+            is_active=new_prompt.is_active
         )
 
     except IntegrityError as e:
-        await db.rollback()
+        await database.rollback()
         logger.error(f"Database integrity error: {str(e)}")
         raise HTTPException(
             status_code=409,
             detail="Prompt with this idempotency key already exists"
         )
     except Exception as e:
-        await db.rollback()
+        await database.rollback()
         logger.error(f"Unexpected error creating prompt: {str(e)}")
         raise HTTPException(
             status_code=500,
@@ -95,13 +86,13 @@ async def create_prompt(
 
 
 @router.get("/{prompt_id}", response_model=PromptResponse)
-async def get_prompt(
+async def get_prompt_by_id(
         prompt_id: int,
-        db: AsyncSession = Depends(get_db)
+        database: AsyncSession = Depends(get_db)
 ):
     """Retrieve a specific prompt by ID"""
     stmt = select(PromptRecord).where(PromptRecord.id == prompt_id)
-    result = await db.execute(stmt)
+    result = await database.execute(stmt)
     prompt = result.scalar_one_or_none()
 
     if not prompt:
@@ -118,3 +109,32 @@ async def get_prompt(
         created_at=prompt.created_at
     )
 
+
+@router.get("/{company_id}", response_model=List[PromptResponse])
+async def get_prompts_by_company_id(
+        company_id: int,
+        database: AsyncSession = Depends(get_db)):
+    """
+    Retrieve a list of prompts belongs to a company ID
+    Todo: consider pagination
+    """
+    stmt = select(PromptRecord).where(PromptRecord.company_id == company_id)
+    result = await database.execute(stmt)
+    prompts = result.all()
+
+    if not prompts:
+        raise HTTPException(status_code=404, detail="Prompts not found")
+
+    response_array = []
+    for prompt in prompts:
+        response_array.append(PromptResponse(
+            id=prompt.id,
+            prompt=prompt.prompt,
+            project_name=prompt.project_name,
+            user_id=prompt.user_id,
+            execution_status=ExecutionStatus(prompt.execution_status),
+            ai_response=prompt.ai_response,
+            idempotency_key=prompt.idempotency_key,
+            created_at=prompt.created_at
+        ))
+    return response_array

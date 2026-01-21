@@ -35,14 +35,17 @@ def custom_generate_unique_id(route: APIRoute) -> str:
     return f"{route.tags[0]}-{route.name}"
 
 
+"""
 if settings.SENTRY_DSN and settings.environment != "development":
     sentry_sdk.init(dsn=str(settings.SENTRY_DSN), enable_tracing=True)
+"""
+
 
 app = FastAPI(
     title=settings.app_name,
     version=settings.app_version,
     debug=settings.debug,
-    generate_unique_id_function=custom_generate_unique_id,
+    # generate_unique_id_function=custom_generate_unique_id,
     lifespan=lifespan
 )
 
@@ -57,7 +60,7 @@ app.add_middleware(
 )
 
 # include routers
-app.include_router(api_router, prefix=settings.API_V1_STR)
+app.include_router(api_router, prefix=settings.api_prefix)
 
 
 @app.get("/health", response_model=HealthResponse)

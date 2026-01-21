@@ -1,4 +1,4 @@
-from base import BaseConfig
+from app.config.base import BaseConfig
 from pydantic_settings import SettingsConfigDict
 
 
@@ -9,7 +9,7 @@ class DevelopmentConfig(BaseConfig):
     debug: bool = True
 
     # Database
-    mysql_database: str = "ai_prompts_dev"
+    mysql_database: str = "kila_intelligence"
     mysql_pool_size: int = 5
 
     # Logging - More verbose in dev
