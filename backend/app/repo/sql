@@ -1,0 +1,83 @@
+-- Database Schema for AI Prompt Service
+-- This is the equivalent SQL schema that SQLAlchemy will generate
+
+CREATE DATABASE IF NOT EXISTS ai_prompts
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+
+USE ai_prompts;
+
+-- Main prompts table
+CREATE TABLE IF NOT EXISTS prompts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    -- Prompt content and metadata
+    prompt TEXT NOT NULL,
+    project_name VARCHAR(100) NOT NULL,
+    user_id VARCHAR(100) NOT NULL,
+
+    -- Idempotency key for preventing duplicates
+    idempotency_key VARCHAR(100) NOT NULL UNIQUE,
+
+    -- Timestamps
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    -- active or not
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+
+    -- Indexes for performance
+    INDEX idx_project_name (project_name),
+    INDEX idx_user_id (user_id),
+    INDEX idx_idempotency_key (idempotency_key),
+    INDEX idx_project_user (project_name, user_id),
+    INDEX idx_user_created (user_id, created_at)
+) CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Optional: Table for tracking user information
+CREATE TABLE IF NOT EXISTS users (
+    user_id VARCHAR(100) PRIMARY KEY,
+    username VARCHAR(100) NOT NULL,
+    email VARCHAR(255),
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_active DATETIME,
+
+    INDEX idx_email (email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Optional: Table for project metadata
+CREATE TABLE IF NOT EXISTS projects (
+    project_name VARCHAR(100) PRIMARY KEY,
+    description TEXT,
+    created_by VARCHAR(100),
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    is_active BOOLEAN DEFAULT TRUE,
+
+    FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Schema explanation:
+--
+-- prompts table:
+--   - id: Auto-incrementing primary key
+--   - prompt: The actual prompt text submitted by the user
+--   - project_name: Project identifier for organizing prompts
+--   - user_id: Identifier for the user who submitted the prompt
+--   - execution_status: Tracks whether AI processing succeeded/failed/pending
+--   - ai_response: Stores the AI model's response
+--   - idempotency_key: Unique key to prevent duplicate submissions
+--   - created_at/updated_at: Timestamp tracking
+--
+-- Indexes:
+--   - idx_project_name: Fast lookups by project
+--   - idx_user_id: Fast lookups by user
+--   - idx_idempotency_key: Ensures uniqueness and fast duplicate checks
+--   - idx_project_user: Composite index for project+user queries
+--   - idx_user_created: Composite index for user activity queries
+--
+-- Design considerations:
+--   1. Idempotency: The unique idempotency_key prevents duplicate submissions
+--   2. Performance: Multiple indexes for common query patterns
+--   3. Scalability: InnoDB engine supports transactions and row-level locking
+--   4. UTF8MB4: Supports full Unicode including emojis
+--   5. Timestamps: Automatic tracking of creation and updates

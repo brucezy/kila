@@ -170,3 +170,32 @@ The email templates are in `./backend/app/email-templates/`. Here, there are two
 Before continuing, ensure you have the [MJML extension](https://marketplace.visualstudio.com/items?itemName=attilabuti.vscode-mjml) installed in your VS Code.
 
 Once you have the MJML extension installed, you can create a new email template in the `src` directory. After creating the new email template and with the `.mjml` file open in your editor, open the command palette with `Ctrl+Shift+P` and search for `MJML: Export to HTML`. This will convert the `.mjml` file to a `.html` file and now you can save it in the build directory.
+
+# Setup and run in different environment 
+Automatically loads the right config based on ENVIRONMENT variable
+Falls back to development if not set
+Supports aliases (prod → production, dev → development)
+Inheritance Pattern:
+
+BaseConfig (defaults) → DevelopmentConfig (overrides for dev)
+                      → BetaConfig (overrides for beta)
+                      → ProductionConfig (overrides for prod)
+Different Settings Per Environment:
+
+Development: Debug on, verbose logging, allow all CORS, no rate limits
+Beta: Debug on, moderate logging, restricted CORS, moderate rate limits
+Production: Debug off, minimal logging, strict CORS, strict rate limits
+🚀 Usage:
+bash
+## Run in development
+export ENVIRONMENT=development
+uvicorn app.main:app --reload
+
+## Run in beta
+export ENVIRONMENT=beta
+uvicorn app.main:app --workers 4
+
+## Run in production
+export ENVIRONMENT=production
+gunicorn app.main:app --workers 8 --worker-class uvicorn.workers.UvicornWorker
+The system is secure (secrets never in code), scalable (easy to add new environments), and maintainable (clear separation of concerns). Each environment has its own database, API keys, and security settings!
