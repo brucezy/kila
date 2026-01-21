@@ -16,6 +16,7 @@ class PromptRequest(BaseModel):
     project_name: str = Field(..., min_length=1, max_length=100, description="Project identifier")
     user_id: str = Field(..., min_length=1, max_length=100, description="User identifier")
     idempotency_key: str = Field(..., min_length=1, max_length=100, description="Unique key to prevent duplicates")
+    company_id: str = Field(..., min_length=1, max_length=100, description="company identifier")
 
 
 class PromptResponse(BaseModel):
@@ -26,6 +27,8 @@ class PromptResponse(BaseModel):
     idempotency_key: str
     created_at: datetime
     is_duplicate: bool = False
+    company_id: str
+    is_active: bool
 
 
 class HealthResponse(BaseModel):

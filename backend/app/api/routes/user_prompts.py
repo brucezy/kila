@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
@@ -10,7 +11,7 @@ from app.core.db import PromptRecord, get_db
 
 
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/api/v1/prompts", tags=["prompts"])
+router = APIRouter(prefix="/prompts", tags=["prompts"])
 
 
 @router.post("/", response_model=PromptResponse, status_code=201)
@@ -28,7 +29,7 @@ async def create_prompt(
             PromptRecord.idempotency_key == request.idempotency_key
         )
         result = await database.execute(stmt)
-        existing_prompt = result.scalar_one_or_none()
+        existing_prompt: PromptResponse = result.scalar_one_or_none()
 
         if existing_prompt:
             logger.info(f"Duplicate request detected for idempotency_key: {request.idempotency_key}")
@@ -39,7 +40,9 @@ async def create_prompt(
                 user_id=existing_prompt.user_id,
                 idempotency_key=existing_prompt.idempotency_key,
                 created_at=existing_prompt.created_at,
-                is_duplicate=True
+                is_duplicate=True,
+                company_id=existing_prompt.company_id,
+                is_active=existing_prompt.is_active
             )
 
         # Create new prompt record with pending status
@@ -48,7 +51,7 @@ async def create_prompt(
             project_name=request.project_name,
             user_id=request.user_id,
             idempotency_key=request.idempotency_key,
-            company=request.company
+            company_id=request.company_id
         )
 
         database.add(new_prompt)
@@ -65,7 +68,7 @@ async def create_prompt(
             idempotency_key=new_prompt.idempotency_key,
             created_at=new_prompt.created_at,
             is_duplicate=False,
-            company=new_prompt.company,
+            company_id=new_prompt.company_id,
             is_active=new_prompt.is_active
         )
 
@@ -85,7 +88,7 @@ async def create_prompt(
         )
 
 
-@router.get("/{prompt_id}", response_model=PromptResponse)
+@router.get("/prompt_id/{prompt_id}", response_model=PromptResponse)
 async def get_prompt_by_id(
         prompt_id: int,
         database: AsyncSession = Depends(get_db)
@@ -103,14 +106,15 @@ async def get_prompt_by_id(
         prompt=prompt.prompt,
         project_name=prompt.project_name,
         user_id=prompt.user_id,
-        execution_status=ExecutionStatus(prompt.execution_status),
-        ai_response=prompt.ai_response,
         idempotency_key=prompt.idempotency_key,
-        created_at=prompt.created_at
+        created_at=prompt.created_at,
+        company_id=prompt.company_id,
+        is_active=prompt.is_active,
+        is_duplicate=False
     )
 
 
-@router.get("/{company_id}", response_model=List[PromptResponse])
+@router.get("/company_id/{company_id}", response_model=List[PromptResponse])
 async def get_prompts_by_company_id(
         company_id: int,
         database: AsyncSession = Depends(get_db)):
@@ -120,21 +124,23 @@ async def get_prompts_by_company_id(
     """
     stmt = select(PromptRecord).where(PromptRecord.company_id == company_id)
     result = await database.execute(stmt)
-    prompts = result.all()
+
+    prompts = result.scalars().all()
 
     if not prompts:
         raise HTTPException(status_code=404, detail="Prompts not found")
 
     response_array = []
-    for prompt in prompts:
+    for record in prompts:
         response_array.append(PromptResponse(
-            id=prompt.id,
-            prompt=prompt.prompt,
-            project_name=prompt.project_name,
-            user_id=prompt.user_id,
-            execution_status=ExecutionStatus(prompt.execution_status),
-            ai_response=prompt.ai_response,
-            idempotency_key=prompt.idempotency_key,
-            created_at=prompt.created_at
+            id=record.id,
+            prompt=record.prompt,
+            project_name=record.project_name,
+            user_id=record.user_id,
+            idempotency_key=record.idempotency_key,
+            created_at=record.created_at,
+            company_id=record.company_id,
+            is_active=record.is_active,
+            is_duplicate=False
         ))
     return response_array
