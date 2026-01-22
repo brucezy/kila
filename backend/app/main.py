@@ -6,7 +6,7 @@ import logging
 from contextlib import asynccontextmanager
 from app.api.main import api_router
 from app.config import settings
-from app.models.schemas import HealthResponse
+from app.models.prompts_schemas import HealthResponse
 from app.core import db
 
 logging.basicConfig(

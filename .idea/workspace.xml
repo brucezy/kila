@@ -5,9 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a1c2ee6-ef68-4b49-b189-0e076d272841" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/backend/app/config/prompts/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/app/config/prompts/system_prompts.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.env.development" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.env.development" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/app/api/routes/user_prompts.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/api/routes/user_prompts.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/app/models/schemas.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/models/schemas.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app/config/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/config/base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app/config/development.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/config/development.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app/config/prod.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/config/prod.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app/models/schemas.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/models/prompts_schemas.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app/services/ai_services.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/services/local_ai_services.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pyproject.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/uv.lock" beforeDir="false" afterPath="$PROJECT_DIR$/backend/uv.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,22 +78,11 @@
       <workItem from="1768861407533" duration="7113000" />
       <workItem from="1768935779152" duration="175000" />
       <workItem from="1768935973833" duration="1000000" />
-      <workItem from="1768939040201" duration="26986000" />
+      <workItem from="1768939040201" duration="38217000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/backend/app/api/routes/user_prompts.py</url>
-          <line>31</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

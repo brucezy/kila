@@ -1,13 +1,15 @@
 from fastapi import APIRouter, HTTPException, Depends
-from fastapi.encoders import jsonable_encoder
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 import logging
 from typing import List
+import json
 
-from app.models.schemas import PromptRequest, PromptResponse, ExecutionStatus
+from app.services.local_ai_services import local_model_service
+from app.models.prompts_schemas import PromptRequest, PromptResponse, AlternativePromptsResponse, ReferencePromptRequest
 from app.core.db import PromptRecord, get_db
+from app.config.prompts import system_prompts
 
 
 logger = logging.getLogger(__name__)
@@ -144,3 +146,28 @@ async def get_prompts_by_company_id(
             is_duplicate=False
         ))
     return response_array
+
+
+@router.post("/alternative_prompts", response_model=AlternativePromptsResponse)
+async def create_alternative_prompts(request: ReferencePromptRequest):
+    """Process using local Ollama"""
+    logger.info(f"Calling local model: {local_model_service.model}")
+
+    # Check if Ollama is running
+    is_healthy = await local_model_service.check_health()
+    if not is_healthy:
+        raise Exception("local model service is not running or not accessible")
+
+    # Use chat endpoint for better results
+    content = (system_prompts.alternative_prompts_system_input +
+               f"\n Now provide alternative prompts for this reference: {request.origin_prompt}")
+    # messages = [{"role": "user", "content": content}]
+    result = await local_model_service.generate(prompt=content)
+
+    logger.info(f"Generated alternative prompts: {result}")
+
+    logger.info("Ollama processing completed successfully")
+
+    json_output = json.loads(result)
+
+    return AlternativePromptsResponse(**json_output)

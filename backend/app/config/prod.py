@@ -29,7 +29,7 @@ class ProductionConfig(BaseConfig):
     rate_limit_period: int = 60
 
     # AI Settings - Production model
-    ai_model: str = "claude-sonnet-4-5-20250929"
+    ai_model: str = "qwen3-coder:30b"
     ai_timeout: int = 60  # Longer timeout in production
 
     # Security - Must be set in environment

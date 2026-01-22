@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 from enum import Enum
 from app.config import settings
 
@@ -29,6 +29,24 @@ class PromptResponse(BaseModel):
     is_duplicate: bool = False
     company_id: str
     is_active: bool
+
+
+class ReferencePromptRequest(BaseModel):
+    user_id: str
+    origin_prompt: str
+
+
+# 1. Nested model (for items in the array)
+class AlternativePrompt(BaseModel):
+    category: str
+    prompt: str
+    reason: Optional[str] = None
+
+
+class AlternativePromptsResponse(BaseModel):
+    original_prompt: str
+    alternatives: List[AlternativePrompt]
+    total_count: int
 
 
 class HealthResponse(BaseModel):

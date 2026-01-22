@@ -32,9 +32,10 @@ class BaseConfig(BaseSettings):
     db_projects_table_name: str = "projects"
 
     # AI Model Settings
-    anthropic_api_key: str
-    ai_model: str = "claude-sonnet-4-5-20250929"
-    max_tokens: int = 1024
+    ai_model_url: str = "http://localhost:11434"
+    ai_model_api_key: str = ''
+    ai_model: str = "qwen3-coder:30b"
+    max_tokens: int = 1024 * 1024
     ai_timeout: int = 30  # seconds
 
     # Logging
