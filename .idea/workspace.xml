@@ -5,19 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a1c2ee6-ef68-4b49-b189-0e076d272841" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/app/config/prompts/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/app/config/prompts/system_prompts.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/kila.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/kila.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.env.development" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.env.development" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/app/api/routes/user_prompts.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/api/routes/user_prompts.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/app/config/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/config/base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/app/config/development.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/config/development.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/app/config/prod.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/config/prod.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/app/models/schemas.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/models/prompts_schemas.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/app/services/ai_services.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/services/local_ai_services.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pyproject.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/uv.lock" beforeDir="false" afterPath="$PROJECT_DIR$/backend/uv.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app/core/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/core/db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,21 +38,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/yongzhang/Development/GEO/kila&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PythonContentEntriesConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "/Users/yongzhang/Development/GEO/kila",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="PyConsoleOptionsProvider">
+    <option name="myPythonConsoleState">
+      <console-settings module-name="kila" is-module-sdk="true">
+        <option name="myUseModuleSdk" value="true" />
+        <option name="myModuleName" value="kila" />
+      </console-settings>
+    </option>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -78,7 +79,12 @@
       <workItem from="1768861407533" duration="7113000" />
       <workItem from="1768935779152" duration="175000" />
       <workItem from="1768935973833" duration="1000000" />
-      <workItem from="1768939040201" duration="38217000" />
+      <workItem from="1768939040201" duration="40586000" />
+      <workItem from="1769193645493" duration="356000" />
+      <workItem from="1769194028306" duration="12953000" />
+      <workItem from="1769379658441" duration="1462000" />
+      <workItem from="1769537721217" duration="141000" />
+      <workItem from="1769537903959" duration="7311000" />
     </task>
     <servers />
   </component>

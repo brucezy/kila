@@ -28,7 +28,7 @@ class BaseConfig(BaseSettings):
     # Database tables setting
     db_companies_table_name: str = "companies"
     db_users_table_name: str = "users"
-    db_prompts_table_name: str = "prompts"
+    db_brand_prompts_table_name: str = "brand_prompts"
     db_projects_table_name: str = "projects"
 
     # AI Model Settings
