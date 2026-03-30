@@ -59,7 +59,7 @@ services:
     restart: unless-stopped
 
   ofelia:
-    image: mcuadros/ofelia:v0.3.12
+    image: mcuadros/ofelia:latest
     depends_on:
       - scraper
     command: daemon --docker
