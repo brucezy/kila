@@ -39,11 +39,11 @@ const API_BASE_URL = import.meta.env.VITE_API_URL ?? ""
 const API_PREFIX = "/api/v1"
 
 async function fetchOverview(
-  brand_id: number,
+  brand_id: string,
   segment: string,
 ): Promise<OverviewResponse> {
-  const token = getAuthToken()
-  const params = new URLSearchParams({ brand_id: String(brand_id), segment })
+  const token = await getAuthToken()
+  const params = new URLSearchParams({ brand_id, segment })
   const url = `${API_BASE_URL}${API_PREFIX}/insights/overview?${params.toString()}`
   const res = await fetch(url, {
     headers: {
@@ -71,7 +71,7 @@ export default function ActionableInsights() {
   })
 
   const brand = brandsData?.brands?.[0]
-  const brandId = brand ? Number(brand.brand_id) : null
+  const brandId = brand?.brand_id ?? null
   const segment = ""
 
   // Fetch overview once brand is available

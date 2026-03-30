@@ -42,7 +42,7 @@ interface SignalDetailResponse {
 
 interface Props {
   selectedSignal: { signal_type: string; segment: string; date: string } | null
-  brandId: number
+  brandId: string
 }
 
 // ── API helpers ──────────────────────────────────────────────────────────────
@@ -52,13 +52,13 @@ const API_PREFIX = "/api/v1"
 
 async function fetchSignalDetail(
   signal_type: string,
-  brand_id: number,
+  brand_id: string,
   segment: string,
   date: string,
 ): Promise<SignalDetailResponse> {
-  const token = getAuthToken()
+  const token = await getAuthToken()
   const params = new URLSearchParams({
-    brand_id: String(brand_id),
+    brand_id,
     segment,
     date,
   })
@@ -148,7 +148,7 @@ function TrendValue({ value }: { value: number }) {
 interface ActionItemProps {
   rec: SignalDetailResponse["recommendations"][number]
   index: number
-  brandId: number
+  brandId: string
   selectedSignal: NonNullable<Props["selectedSignal"]>
 }
 

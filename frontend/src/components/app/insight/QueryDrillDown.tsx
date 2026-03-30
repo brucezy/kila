@@ -16,7 +16,7 @@ interface QueryDrillDownResponse {
 
 interface Props {
   signal_type: string
-  brand_id: number
+  brand_id: string
   segment: string
   date: string
   action_type: string
@@ -29,14 +29,14 @@ const API_PREFIX = "/api/v1"
 
 async function fetchQueryDrillDown(
   signal_type: string,
-  brand_id: number,
+  brand_id: string,
   segment: string,
   date: string,
   action_type: string,
 ): Promise<QueryDrillDownResponse> {
-  const token = getAuthToken()
+  const token = await getAuthToken()
   const params = new URLSearchParams({
-    brand_id: String(brand_id),
+    brand_id,
     segment,
     date,
     action_type,
