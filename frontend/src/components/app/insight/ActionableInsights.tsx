@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 import { getAuthToken } from "@/clients/auth-helper"
 import { dashboardAPI } from "@/clients/dashboard"
-import SignalCommandCenter from "./SignalCommandCenter"
-import SignalDetail from "./SignalDetail"
+import { SignalCommandCenter } from "./SignalCommandCenter"
+import { SignalDetail } from "./SignalDetail"
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
